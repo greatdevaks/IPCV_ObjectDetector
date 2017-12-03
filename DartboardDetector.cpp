@@ -106,9 +106,12 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 			cout << "No dartboard detected." << endl;
 		}
 	}
-	
+	Mat img_merged = img_orig.clone();
+	for (int i = 0; i < gtvec_current_img.size(); i++) {
+		rectangle(img_merged, gtvec_current_img[i], Scalar(255, 0, 0), 2);
+	}
+
 	if (detections.size() != 0) {
-		Mat img_merged = img_orig.clone();
 		for (size_t i = 0; i < detections.size(); i++)
 		{
 			rectangle(img_merged, detections[i], Scalar(0, 69, 255), 2);
@@ -116,7 +119,7 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 		cout << detections.size() << " dartboard(s) predicted." << endl;
 		imwrite("merged.jpg", img_merged);
 	}
-	
+
 	F1Score f1s;
 	// calculating the F1Score, Precision and Recall
 	for (int i = 0; i < detections.size(); i++)

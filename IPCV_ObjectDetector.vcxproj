@@ -156,7 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DartboardCOlourPatches.h" />
+    <ClInclude Include="DartboardColourPatchs.h" />
     <ClInclude Include="DartboardDetector.h" />
     <ClInclude Include="DartboardDetector_GroundTruthInitializer.h" />
     <ClInclude Include="F1Score.h" />
@@ -167,7 +167,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DartboardCOlourPatches.cpp" />
+    <ClCompile Include="DartboardColourPatchs.cpp" />
     <ClCompile Include="DartboardDetector.cpp" />
     <ClCompile Include="DartboardDetector_GroundTruthInitializer.cpp" />
     <ClCompile Include="F1Score.cpp" />

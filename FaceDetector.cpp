@@ -75,6 +75,10 @@ Mat FaceDetector::detectFacesAndDisplayResult(Mat img_orig, vector<Rect> gtvec_c
 	// tp_count = 0, fp_count = 0, fn_count = 0
 	F1Score f1s;
 
+	for (int i = 0; i < gtvec_current_img.size(); i++) {
+		rectangle(img_orig, gtvec_current_img[i], Scalar(255, 0, 0), 2);
+	}
+
 	// drawing box around faces found and comparing with the ground truth to calculate the F1Sore
 	for (int i = 0; i < faces_found.size(); i++)
 	{

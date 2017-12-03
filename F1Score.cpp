@@ -44,8 +44,11 @@ float F1Score::calculateF1Score(float precision, float recall) {
 }
 
 bool F1Score::calculateIntersectionAreaBetweenGTBoxAndDetectedBox(Rect ground_truth_box, Rect detected_box) {
-	Rect intersection_area = ground_truth_box & detected_box;
-	float intersection_ratio = (float)intersection_area.area() / (float)ground_truth_box.area();
+	Rect intersection_rect = ground_truth_box & detected_box;
+	Rect union_rect = ground_truth_box | detected_box;
+	float intersection_area = intersection_rect.area();
+	float union_area = union_rect.area();
+	float intersection_ratio = intersection_area / union_area;
 	return intersection_ratio > 0.5;
 }
 

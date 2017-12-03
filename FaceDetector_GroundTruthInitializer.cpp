@@ -51,7 +51,9 @@ FaceDetector_GroundTruthInitializer::FaceDetector_GroundTruthInitializer()
 	gtvec_dart14_faces.push_back(Rect(467, 202, abs(555 - 467), abs(324 - 202)));
 	gtvec_dart14_faces.push_back(Rect(725, 181, abs(828 - 725), abs(300 - 181)));
 
-	gtvec_dart15_faces.push_back(Rect(0, 0, abs(0 - 0), abs(0 - 0)));
+	gtvec_dart15_faces.push_back(Rect(65, 134, abs(121 - 65), abs(211 - 134)));
+	gtvec_dart15_faces.push_back(Rect(542, 133, abs(610 - 542), abs(215 - 133)));
+
 
 	groundtruth_faces.push_back(gtvec_dart0_faces);
 	groundtruth_faces.push_back(gtvec_dart1_faces);

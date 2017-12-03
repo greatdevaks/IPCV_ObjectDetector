@@ -9,7 +9,7 @@ DartboardDetector_GroundTruthInitializer::DartboardDetector_GroundTruthInitializ
 	cout << endl;
 	cout << "Started initializing groundtruth for dartboard detector." << endl;
 
-	gtvec_dart0_dartboards.push_back(Rect(422, 1, abs(606 - 196), abs(219 - 1)));
+	gtvec_dart0_dartboards.push_back(Rect(422, 1, abs(606 - 422), abs(219 - 1)));
 
 	gtvec_dart1_dartboards.push_back(Rect(166, 100, abs(421 - 166), abs(355 - 100)));
 

@@ -38,7 +38,7 @@
     <ClInclude Include="HoughTransform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DartboardCOlourPatches.h">
+    <ClInclude Include="DartboardColourPatchs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -61,14 +61,12 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
-    <ClCompile Include="DartboardCOlourPatches.cpp">
-      <Filter>Source FIles</Filter>
-    </ClCompile>
     <ClCompile Include="DartboardDetector.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
     <ClCompile Include="IPCV_ObjectDetector.cpp">
       <Filter>Source FIles</Filter>
     </ClCompile>
+    <ClCompile Include="DartboardColourPatchs.cpp" />
   </ItemGroup>
 </Project>
