@@ -45,6 +45,8 @@ HoughTransform::HoughTransform(Mat img_orig, string img_name)
 	Mat img_canny;
 	Canny(img_orig, img_canny, 50, 200, 3);
 
+	imwrite("canny_" + img_name, img_canny);
+
 	// generate hough circles using HoughCircle function
 	HoughLinesP(img_canny, vec_hough_lines, 1, CV_PI / 180, 50, 50, 10);
 
@@ -327,8 +329,8 @@ void HoughTransform::showHoughLinesSpace(string img_name) {
 	int w = img_edge.cols;
 	int h = img_edge.rows;
 
-	//Transform
-	_accu = 0; _accu_w = 0; _accu_h = 0; _img_w = 0; _img_h = 0;
+	//performHoughLineTransform
+	accum = 0; accum_width = 0; accum_height = 0; _img_w = 0; _img_h = 0;
 
 	unsigned char* img_data = img_edge.data;
 	_img_w = w;
@@ -336,10 +338,10 @@ void HoughTransform::showHoughLinesSpace(string img_name) {
 
 	//Create the accu
 	double hough_h = ((sqrt(2.0) * (double)(h > w ? h : w)) / 2.0);
-	_accu_h = hough_h * 2.0; // -r -> +r
-	_accu_w = 180;
+	accum_height = hough_h * 2.0; // -r -> +r
+	accum_width = 180;
 
-	_accu = (unsigned int*)calloc(_accu_h * _accu_w, sizeof(unsigned int));
+	accum = (unsigned int*)calloc(accum_height * accum_width, sizeof(unsigned int));
 
 	double center_x = w / 2;
 	double center_y = h / 2;
@@ -354,7 +356,7 @@ void HoughTransform::showHoughLinesSpace(string img_name) {
 				for (int t = 0; t < 180; t++)
 				{
 					double r = (((double)x - center_x) * cos((double)t * 0.017453293f)) + (((double)y - center_y) * sin((double)t * 0.017453293f));
-					_accu[(int)((round(r + hough_h) * 180.0)) + t]++;
+					accum[(int)((round(r + hough_h) * 180.0)) + t]++;
 				}
 			}
 		}
@@ -407,32 +409,32 @@ vector< pair< pair<int, int>, pair<int, int> > > HoughTransform::GetLines(int th
 {
 	vector< pair< pair<int, int>, pair<int, int> > > lines;
 
-	if (_accu == 0)
+	if (accum == 0)
 		return lines;
 
-	for (int r = 0; r < _accu_h; r++)
+	for (int r = 0; r < accum_height; r++)
 	{
-		for (int t = 0; t < _accu_w; t++)
+		for (int t = 0; t < accum_width; t++)
 		{
-			if ((int)_accu[(r*_accu_w) + t] >= threshold)
+			if ((int)accum[(r*accum_width) + t] >= threshold)
 			{
 				//Is this point a local maxima (9x9)
-				int max = _accu[(r*_accu_w) + t];
+				int max = accum[(r*accum_width) + t];
 				for (int ly = -4; ly <= 4; ly++)
 				{
 					for (int lx = -4; lx <= 4; lx++)
 					{
-						if ((ly + r >= 0 && ly + r < _accu_h) && (lx + t >= 0 && lx + t < _accu_w))
+						if ((ly + r >= 0 && ly + r < accum_height) && (lx + t >= 0 && lx + t < accum_width))
 						{
-							if ((int)_accu[((r + ly)*_accu_w) + (t + lx)] > max)
+							if ((int)accum[((r + ly)*accum_width) + (t + lx)] > max)
 							{
-								max = _accu[((r + ly)*_accu_w) + (t + lx)];
+								max = accum[((r + ly)*accum_width) + (t + lx)];
 								ly = lx = 5;
 							}
 						}
 					}
 				}
-				if (max > (int)_accu[(r*_accu_w) + t])
+				if (max > (int)accum[(r*accum_width) + t])
 					continue;
 
 
@@ -443,17 +445,17 @@ vector< pair< pair<int, int>, pair<int, int> > > HoughTransform::GetLines(int th
 				{
 					//y = (r - x cos(t)) / sin(t)
 					x1 = 0;
-					y1 = ((double)(r - (_accu_h / 2)) - ((x1 - (_img_w / 2)) * cos(t * 0.017453293f))) / sin(t * 0.017453293f) + (_img_h / 2);
+					y1 = ((double)(r - (accum_height / 2)) - ((x1 - (_img_w / 2)) * cos(t * 0.017453293f))) / sin(t * 0.017453293f) + (_img_h / 2);
 					x2 = _img_w - 0;
-					y2 = ((double)(r - (_accu_h / 2)) - ((x2 - (_img_w / 2)) * cos(t * 0.017453293f))) / sin(t * 0.017453293f) + (_img_h / 2);
+					y2 = ((double)(r - (accum_height / 2)) - ((x2 - (_img_w / 2)) * cos(t * 0.017453293f))) / sin(t * 0.017453293f) + (_img_h / 2);
 				}
 				else
 				{
 					//x = (r - y sin(t)) / cos(t);
 					y1 = 0;
-					x1 = ((double)(r - (_accu_h / 2)) - ((y1 - (_img_h / 2)) * sin(t * 0.017453293f))) / cos(t * 0.017453293f) + (_img_w / 2);
+					x1 = ((double)(r - (accum_height / 2)) - ((y1 - (_img_h / 2)) * sin(t * 0.017453293f))) / cos(t * 0.017453293f) + (_img_w / 2);
 					y2 = _img_h - 0;
-					x2 = ((double)(r - (_accu_h / 2)) - ((y2 - (_img_h / 2)) * sin(t * 0.017453293f))) / cos(t * 0.017453293f) + (_img_w / 2);
+					x2 = ((double)(r - (accum_height / 2)) - ((y2 - (_img_h / 2)) * sin(t * 0.017453293f))) / cos(t * 0.017453293f) + (_img_w / 2);
 				}
 
 				lines.push_back(pair< pair<int, int>, pair<int, int> >(pair<int, int>(x1, y1), pair<int, int>(x2, y2)));
@@ -468,8 +470,8 @@ vector< pair< pair<int, int>, pair<int, int> > > HoughTransform::GetLines(int th
 
 const unsigned int* HoughTransform::GetAccu(int *w, int *h)
 {
-	*w = _accu_w;
-	*h = _accu_h;
+	*w = accum_width;
+	*h = accum_height;
 
-	return _accu;
+	return accum;
 }

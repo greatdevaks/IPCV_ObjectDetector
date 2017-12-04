@@ -39,13 +39,13 @@ public:
 	void showHoughLinesSpace(string img_name);
 
 	// hough lines
-	int Transform(unsigned char* img_data, int w, int h);
+	int performHoughLineTransform(unsigned char* img_data, int w, int h);
 	std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > GetLines(int threshold);
 	const unsigned int* GetAccu(int *w, int *h);
 
-	unsigned int* _accu;
-	int _accu_w;
-	int _accu_h;
+	unsigned int* accum;
+	int accum_width;
+	int accum_height;
 	int _img_w;
 	int _img_h;
 
