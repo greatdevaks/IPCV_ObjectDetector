@@ -99,7 +99,7 @@ HoughTransform::HoughTransform(Mat img_orig, string img_name)
 
 	Mat hs_clone = img_orig.clone();
 	showHoughCircleSpace(img_name);
-	//showHoughLinesSpace(img_name);
+	showHoughLinesSpace(img_name);
 }
 
 
