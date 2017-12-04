@@ -38,67 +38,78 @@ bool ColourPatches::isDartBoardColor(Vec3b color) {
 	return ret;
 }
 
-void ColourPatches::findDartboards(Mat img) {
+vector<Rect> ColourPatches::findDartboards(Mat img, vector<Rect> detections) {
+	
+	vector<Rect> cp_detections;
+	for (int i = 0; i<detections.size(); i++) {
+		Rect f = Rect(detections[i].x, detections[i].y, detections[i].width, detections[i].height);
+		Mat subImage(img, f);
+		
+		
+		imwrite("sub_image"+to_string(i)+".jpg", subImage);
+	
+		int searchDimensions = 5;
+		int searchAreaX = (int)floor(subImage.cols / searchDimensions);
+		int searchAreaY = (int)floor(subImage.rows / searchDimensions);
 
 
-	//img.convertTo(img, CV_32F, 1.0 / 255, 0);
-	img_clone = img.clone();
 
-	int searchDimensions = 5;
-	int searchAreaX = (int)floor(img.cols / searchDimensions);
-	int searchAreaY = (int)floor(img.rows / searchDimensions);
+		vector<Rect> imgSubsectionsWithDartBoardColors;
+
+		for (int i = 0; i < subImage.rows - searchDimensions; i = i + searchDimensions) {
 
 
-
-	vector<Rect> imgSubsectionsWithDartBoardColors;
-
-	for (int i = 0; i < img.rows - searchDimensions; i = i + searchDimensions) {
-
-
-		for (int j = 0; j < img.cols - searchDimensions; j = j + searchDimensions) {
-			Rect r = Rect(j, i, searchDimensions, searchDimensions);
-			Mat imgSubsection = img(r);
+			for (int j = 0; j < subImage.cols - searchDimensions; j = j + searchDimensions) {
+				Rect r = Rect(j, i, searchDimensions, searchDimensions);
+				Mat imgSubsection = subImage(r);
 
 
-			int subsectionVotes = 0;
-			int maxvotes = searchDimensions * searchDimensions;
+				int subsectionVotes = 0;
+				int maxvotes = searchDimensions * searchDimensions;
 
-			for (int k = 0; k < imgSubsection.rows; k++)
-			{
-				for (int l = 0; l < imgSubsection.cols; l++)
+				for (int k = 0; k < imgSubsection.rows; k++)
 				{
-					Vec3b pixelColor;
-					try
+					for (int l = 0; l < imgSubsection.cols; l++)
 					{
-						pixelColor = imgSubsection.at<Vec3b>(k, l);
-						if (isDartBoardColor(pixelColor)) {
+						Vec3b pixelColor;
+						try
+						{
+							pixelColor = imgSubsection.at<Vec3b>(k, l);
+							if (isDartBoardColor(pixelColor)) {
 
-							subsectionVotes++;
+								subsectionVotes++;
+							}
+							else {
+
+							}
+
 						}
-						else {
-
+						catch (cv::Exception& e)
+						{
+							const char* err_msg = e.what();
+							std::cout << "exception caught: " << err_msg << std::endl;
 						}
-
-					}
-					catch (cv::Exception& e)
-					{
-						const char* err_msg = e.what();
-						std::cout << "exception caught: " << err_msg << std::endl;
 					}
 				}
+
+				if (subsectionVotes > maxvotes / 2) {
+					imgSubsectionsWithDartBoardColors.push_back(r);
+					rectangle(subImage, r, Scalar(255, 0, 255), 2);
+					
+				}
+
+
+
 			}
-
-			if (subsectionVotes > maxvotes / 2) {
-				imgSubsectionsWithDartBoardColors.push_back(r);
-				rectangle(img_clone, r, Scalar(255, 0, 255), 2);
-			}
-
-
 
 		}
-
-		imwrite("colour_patches.jpg", img_clone);
-		waitKey(0);
+		if (imgSubsectionsWithDartBoardColors.size() > 20) {
+			imwrite("cp_subimage_" + to_string(i) + ".jpg", subImage);
+			cp_detections.push_back(detections[i]);
+		}
+	
 	}
+
+	return cp_detections;
 }
 

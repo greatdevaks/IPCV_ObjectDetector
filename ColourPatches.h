@@ -16,7 +16,7 @@ public:
 
 
 	bool isDartBoardColor(Vec3b color);
-	void findDartboards(Mat img);
+	vector<Rect> findDartboards(Mat img, vector<Rect> detections);
 
 };
 

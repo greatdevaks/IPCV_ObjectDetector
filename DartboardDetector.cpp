@@ -112,7 +112,7 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 		rectangle(img_merged, gtvec_current_img[i], Scalar(255, 0, 0), 2);
 	}
 
-	if (detections.size() != 0) {
+	/*if (detections.size() != 0) {
 		for (size_t i = 0; i < detections.size(); i++)
 		{
 			rectangle(img_merged, detections[i], Scalar(0, 69, 255), 2);
@@ -120,25 +120,53 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 		cout << detections.size() << " dartboard(s) predicted." << endl;
 		imwrite("vj_ht_" + img_name, img_merged);
 	}
+	else {
+		cout << "No dartbboard predicted." << endl;
+	}*/
 
 	Mat img_cp = img_orig.clone();
 	ColourPatches cp;
-	cp.findDartboards(img_cp);
+	vector<Rect> cp_detections = cp.findDartboards(img_cp, detections);
+
+	if (cp_detections.size() != 0) {
+		for (size_t i = 0; i < cp_detections.size(); i++)
+		{
+			rectangle(img_merged, cp_detections[i], Scalar(0, 69, 255), 2);
+		}
+		cout << cp_detections.size() << " dartboard(s) predicted." << endl;
+		imwrite("vj_ht_cp_" + img_name, img_merged);
+	}
+	else {
+		cout << "No dartbboard predicted." << endl;
+	}
+
+	//F1Score f1s;
+	//// calculating the F1Score, Precision and Recall
+	//for (int i = 0; i < detections.size(); i++)
+	//{
+	//	// calculating area interesection between detected box and ground truth boxes
+	//	for (int j = 0; j < gtvec_current_img.size(); j++) {
+	//		// check if the the area of intersection is greater than threshold value (0.5)
+	//		if (f1s.calculateIntersectionAreaBetweenGTBoxAndDetectedBox(gtvec_current_img[j], detections[i])) {
+	//			f1s.tp_count++;
+	//		}
+	//	}
+	//}
 
 	F1Score f1s;
 	// calculating the F1Score, Precision and Recall
-	for (int i = 0; i < detections.size(); i++)
+	for (int i = 0; i < cp_detections.size(); i++)
 	{
 		// calculating area interesection between detected box and ground truth boxes
 		for (int j = 0; j < gtvec_current_img.size(); j++) {
 			// check if the the area of intersection is greater than threshold value (0.5)
-			if (f1s.calculateIntersectionAreaBetweenGTBoxAndDetectedBox(gtvec_current_img[j], detections[i])) {
+			if (f1s.calculateIntersectionAreaBetweenGTBoxAndDetectedBox(gtvec_current_img[j], cp_detections[i])) {
 				f1s.tp_count++;
 			}
 		}
 	}
 
-	f1s.fp_count = detections.size() - f1s.tp_count;
+	f1s.fp_count = cp_detections.size() - f1s.tp_count;
 	f1s.fn_count = gtvec_current_img.size() - f1s.tp_count;
 
 	f1s.calculateF1Score(f1s.calculatePrecision(f1s.tp_count, f1s.fp_count), f1s.calculateRecall(f1s.tp_count, f1s.fn_count));
