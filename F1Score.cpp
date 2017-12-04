@@ -20,14 +20,28 @@ F1Score::~F1Score()
 
 float F1Score::calculatePrecision(float tp_count, float fp_count) {
 	float result = tp_count / (tp_count + fp_count);
-	cout << "Precision: " << result << endl;
-	return result;
+	if (isnan(result)) {
+		cout << "Precision: " << 0 << endl;
+		return 0;
+	}
+	else {
+		cout << "Precision: " << result << endl;
+		return result;
+	}
+	
 }
 
 float F1Score::calculateRecall(float tp_count, float fn_count) {
 	float result = tp_count / (tp_count + fn_count);
-	cout << "Recall: " << result << endl;
-	return result;
+	if (isnan(result)) {
+		cout << "Recall: " << 0 << endl;
+		return 0;
+	}
+	else {
+		cout << "Recall: " << result << endl;
+		return result;
+	}
+	
 }
 
 float F1Score::calculateF1Score(float precision, float recall) {
