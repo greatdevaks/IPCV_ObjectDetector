@@ -12,6 +12,7 @@
 #include "F1Score.h"
 #include "HoughTransform.h"
 #include <regex>
+#include "ColourPatches.h"
 
 
 using namespace cv;
@@ -119,6 +120,10 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 		cout << detections.size() << " dartboard(s) predicted." << endl;
 		imwrite("vj_ht_" + img_name, img_merged);
 	}
+
+	Mat img_cp = img_orig.clone();
+	ColourPatches cp;
+	cp.findDartboards(img_cp);
 
 	F1Score f1s;
 	// calculating the F1Score, Precision and Recall
