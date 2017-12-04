@@ -231,29 +231,29 @@ void HoughTransform::showHoughCircleSpace(string img_name) {
 
 	// load the original image
 	IplImage* original_image = cvLoadImage(img_name.c_str(), 0);
-	IplImage* original_image_lines = cvLoadImage(img_name.c_str(), 0);
+	//IplImage* original_image_lines = cvLoadImage(img_name.c_str(), 0);
 
 	// create edge image from original image
 	IplImage* edges = cvCreateImage(cvGetSize(original_image), 32, 1);
 
 	// create canny image from original image
-	IplImage* canny = cvCreateImage(cvGetSize(original_image_lines), 8, 1);
+	//IplImage* canny = cvCreateImage(cvGetSize(original_image_lines), 8, 1);
 
 	// create hough circles space image from the original image
 	IplImage* img_hough_circles_space = cvCreateImage(cvGetSize(original_image), 8, 1);
 
 	// create hough lines space image from the original image
-	IplImage* img_hough_lines_space = cvCreateImage(cvSize(360, 1000), 8, 1);
+	//IplImage* img_hough_lines_space = cvCreateImage(cvSize(360, 1000), 8, 1);
 
 	// initially all the accumulator cells should be initialized to zero
 	cvZero(img_hough_circles_space);
-	cvZero(img_hough_lines_space);
+	//cvZero(img_hough_lines_space);
 
 	// detect edges using sobel edge detector
 	cvSobel(original_image, edges, 1, 1);
 
-	// perform canny detection
-	cvCanny(original_image_lines, canny, 200, 0);
+	//// perform canny detection
+	//cvCanny(original_image_lines, canny, 200, 0);
 
 	// process each pixel
 	for (int x = 0; x < original_image->width; x++)
@@ -279,33 +279,33 @@ void HoughTransform::showHoughCircleSpace(string img_name) {
 		}
 	}
 
-	// Iterate through each pixel
-	for (int x = 0; x<original_image_lines->width; x++)
-	{
-		for (int y = 0; y<original_image_lines->height; y++)
-		{
-			// If the current pixel is an edge
-			if (cvGetReal2D(canny, y, x)>0)
-			{
-				// Do the hough thingy
-				for (int theta = 0; theta<360; theta++)
-				{
-					// cos, sin work in radians, so convert degrees into radians
-					// the imgHough->height/2 is to ensure values dont go negative
+	//// Iterate through each pixel
+	//for (int x = 0; x<original_image_lines->width; x++)
+	//{
+	//	for (int y = 0; y<original_image_lines->height; y++)
+	//	{
+	//		// If the current pixel is an edge
+	//		if (cvGetReal2D(canny, y, x)>0)
+	//		{
+	//			// Do the hough thingy
+	//			for (int theta = 0; theta<360; theta++)
+	//			{
+	//				// cos, sin work in radians, so convert degrees into radians
+	//				// the imgHough->height/2 is to ensure values dont go negative
 
-					// p = x*cos(theta) + y*sin(theta)
-					int p = abs(x*cos(theta*3.1412 / 180) + y*sin(theta*3.1412 / 180));
+	//				// p = x*cos(theta) + y*sin(theta)
+	//				int p = abs(x*cos(theta*3.1412 / 180) + y*sin(theta*3.1412 / 180));
 
-					// cast a "vote" in the corresponding accumulator cell
-					int value = cvGetReal2D(img_hough_lines_space, p, theta);
-					cvSetReal2D(img_hough_lines_space, p, theta, value + 1);
-				}
-			}
-		}
-	}
+	//				// cast a "vote" in the corresponding accumulator cell
+	//				int value = cvGetReal2D(img_hough_lines_space, p, theta);
+	//				cvSetReal2D(img_hough_lines_space, p, theta, value + 1);
+	//			}
+	//		}
+	//	}
+	//}
 
-	// Show the hough image
-	cvSaveImage("hough_lines_aishack.jpg", img_hough_lines_space);
+	//// Show the hough image
+	//cvSaveImage("hough_lines_aishack.jpg", img_hough_lines_space);
 
 
 
@@ -316,19 +316,13 @@ void HoughTransform::showHoughCircleSpace(string img_name) {
 
 void HoughTransform::showHoughLinesSpace(string img_name) {
 	int threshold = 175;
-	const char* CW_IMG_ORIGINAL = "Result";
-	const char* CW_IMG_EDGE = "Canny Edge Detection";
-	const char* CW_ACCUMULATOR = "Accumulator";
 
+	Mat img_edge;
+	Mat img_blur;
 
-
-
-	cv::Mat img_edge;
-	cv::Mat img_blur;
-
-	cv::Mat img_ori = cv::imread(img_name, 1);
-	cv::blur(img_ori, img_blur, cv::Size(5, 5));
-	cv::Canny(img_blur, img_edge, 100, 150, 3);
+	Mat img_ori = imread(img_name, 1);
+	blur(img_ori, img_blur, Size(5, 5));
+	Canny(img_blur, img_edge, 100, 150, 3);
 
 	int w = img_edge.cols;
 	int h = img_edge.rows;
@@ -369,16 +363,16 @@ void HoughTransform::showHoughLinesSpace(string img_name) {
 	if (threshold == 0)
 		threshold = w > h ? w / 4 : h / 4;
 
-	cv::Mat img_res = img_ori.clone();
+	Mat img_res = img_ori.clone();
 
 	//Search the accumulator
-	std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > lines = GetLines(threshold);
+	vector< pair< pair<int, int>, pair<int, int> > > lines = GetLines(threshold);
 
 	//Draw the results
-	std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > >::iterator it;
+	vector< pair< pair<int, int>, pair<int, int> > >::iterator it;
 	for (it = lines.begin(); it != lines.end(); it++)
 	{
-		cv::line(img_res, cv::Point(it->first.first, it->first.second), cv::Point(it->second.first, it->second.second), cv::Scalar(0, 0, 255), 2, 8);
+		line(img_res, Point(it->first.first, it->first.second), Point(it->second.first, it->second.second), Scalar(0, 0, 255), 2, 8);
 	}
 
 	//Visualize all
@@ -394,7 +388,7 @@ void HoughTransform::showHoughLinesSpace(string img_name) {
 	double contrast = 1.0;
 	double coef = 255.0 / (double)maxa * contrast;
 
-	cv::Mat img_accu(ah, aw, CV_8UC3);
+	Mat img_accu(ah, aw, CV_8UC3);
 	for (int p = 0; p < (ah*aw); p++)
 	{
 		unsigned char c = (double)accu[p] * coef < 255.0 ? (double)accu[p] * coef : 255.0;
@@ -404,14 +398,14 @@ void HoughTransform::showHoughLinesSpace(string img_name) {
 	}
 
 
-
+	cvtColor(img_accu, img_accu, COLOR_RGB2GRAY);
 	imwrite("hough_lines_space.jpg", img_accu);
 
 }
 
-std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > HoughTransform::GetLines(int threshold)
+vector< pair< pair<int, int>, pair<int, int> > > HoughTransform::GetLines(int threshold)
 {
-	std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > lines;
+	vector< pair< pair<int, int>, pair<int, int> > > lines;
 
 	if (_accu == 0)
 		return lines;
@@ -462,13 +456,13 @@ std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > HoughTransf
 					x2 = ((double)(r - (_accu_h / 2)) - ((y2 - (_img_h / 2)) * sin(t * 0.017453293f))) / cos(t * 0.017453293f) + (_img_w / 2);
 				}
 
-				lines.push_back(std::pair< std::pair<int, int>, std::pair<int, int> >(std::pair<int, int>(x1, y1), std::pair<int, int>(x2, y2)));
+				lines.push_back(pair< pair<int, int>, pair<int, int> >(pair<int, int>(x1, y1), pair<int, int>(x2, y2)));
 
 			}
 		}
 	}
 
-	//std::cout << "lines: " << lines.size() << " " << threshold << std::endl;
+	//cout << "lines: " << lines.size() << " " << threshold << endl;
 	return lines;
 }
 
