@@ -226,52 +226,91 @@ void HoughTransform::countLinesPerBoundaryBox(Point p0, Point p1) {
 
 void HoughTransform::showHoughCircleSpace(string img_name) {
 
-	int radius = 124;
+	// specify the radius for the hough circles
+	int radius_hough_space = 124;
 
+	// load the original image
+	IplImage* original_image = cvLoadImage(img_name.c_str(), 0);
+	IplImage* original_image_lines = cvLoadImage(img_name.c_str(), 0);
 
-	IplImage* img = cvLoadImage(img_name.c_str(), 0);			// The original image
-	IplImage* edges = cvCreateImage(cvGetSize(img), 32, 1);		// Only edges
-	IplImage* img_hough_space = cvCreateImage(cvGetSize(img), 8, 1);	// The accumulator cells
+	// create edge image from original image
+	IplImage* edges = cvCreateImage(cvGetSize(original_image), 32, 1);
 
-	// Ensure the accumulator cells are all zeroes out
-	cvZero(img_hough_space);
+	// create canny image from original image
+	IplImage* canny = cvCreateImage(cvGetSize(original_image_lines), 8, 1);
 
-	// Detect edges in the image
-	cvSobel(img, edges, 1, 1);
+	// create hough circles space image from the original image
+	IplImage* img_hough_circles_space = cvCreateImage(cvGetSize(original_image), 8, 1);
 
+	// create hough lines space image from the original image
+	IplImage* img_hough_lines_space = cvCreateImage(cvSize(360, 1000), 8, 1);
 
+	// initially all the accumulator cells should be initialized to zero
+	cvZero(img_hough_circles_space);
+	cvZero(img_hough_lines_space);
 
-	// Uncomment to save edges to a file
-	//cvSaveImage("C:\\circle_edges.jpg", edges);
+	// detect edges using sobel edge detector
+	cvSobel(original_image, edges, 1, 1);
 
-	// Loop through each pixel
-	for (int x = 0; x < img->width; x++)
+	// perform canny detection
+	cvCanny(original_image_lines, canny, 200, 0);
+
+	// process each pixel
+	for (int x = 0; x < original_image->width; x++)
 	{
-		for (int y = 0; y < img->height; y++)
+		for (int y = 0; y < original_image->height; y++)
 		{
-			// Check if the current pixel is an edge
+			// checking if the current pixel is an edge or not
 			int value = cvGetReal2D(edges, y, x);
 			if (value == 0) continue;
 
-			// If it is an edge, generate its circle in the parameter space
+			// generate circle in hough space if pixel is an edge
 			for (int theta = 0; theta < 360; theta++)
 			{
-				int a = x + radius*cos(theta*3.1412 / 180);
-				int b = y + radius*sin(theta*3.1412 / 180);
+				int a = x + radius_hough_space*cos(theta*3.1412 / 180);
+				int b = y + radius_hough_space*sin(theta*3.1412 / 180);
 
 				// Outside the image? Skip onto the next pixel
-				if (a < 0 || a >= img->width || b < 0 || b >= img->height) continue;
+				if (a < 0 || a >= original_image->width || b < 0 || b >= original_image->height) continue;
 
-				value = cvGetReal2D(img_hough_space, b, a);
-				cvSetReal2D(img_hough_space, b, a, value + 1);
+				value = cvGetReal2D(img_hough_circles_space, b, a);
+				cvSetReal2D(img_hough_circles_space, b, a, value + 1);
 			}
 		}
 	}
 
+	// Iterate through each pixel
+	for (int x = 0; x<original_image_lines->width; x++)
+	{
+		for (int y = 0; y<original_image_lines->height; y++)
+		{
+			// If the current pixel is an edge
+			if (cvGetReal2D(canny, y, x)>0)
+			{
+				// Do the hough thingy
+				for (int theta = 0; theta<360; theta++)
+				{
+					// cos, sin work in radians, so convert degrees into radians
+					// the imgHough->height/2 is to ensure values dont go negative
+
+					// p = x*cos(theta) + y*sin(theta)
+					int p = abs(x*cos(theta*3.1412 / 180) + y*sin(theta*3.1412 / 180));
+
+					// cast a "vote" in the corresponding accumulator cell
+					int value = cvGetReal2D(img_hough_lines_space, p, theta);
+					cvSetReal2D(img_hough_lines_space, p, theta, value + 1);
+				}
+			}
+		}
+	}
+
+	// Show the hough image
+	cvSaveImage("hough_lines_aishack.jpg", img_hough_lines_space);
+
 
 
 	// Uncomment to save to a file
-	cvSaveImage("hough_space_circle.jpg", img_hough_space);
+	cvSaveImage("hough_space_circle.jpg", img_hough_circles_space);
 	cvWaitKey(0);
 }
 
