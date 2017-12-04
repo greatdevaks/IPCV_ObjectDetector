@@ -8,6 +8,7 @@
 #include <opencv2\opencv.hpp>
 #include <regex>
 #include <sstream>
+#include "HoughLines.h"
 
 using namespace cv;
 using namespace std;
@@ -41,13 +42,13 @@ public:
 	// hough lines
 	int performHoughLineTransform(unsigned char* img_data, int w, int h);
 	std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > GetLines(int threshold);
-	const unsigned int* GetAccu(int *w, int *h);
+	const unsigned int* getAccum(int *w, int *h);
 
 	unsigned int* accum;
 	int accum_width;
 	int accum_height;
-	int _img_w;
-	int _img_h;
+	int img_cols;
+	int img_rows;
 
 };
 

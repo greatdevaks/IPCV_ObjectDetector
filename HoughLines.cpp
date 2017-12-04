@@ -15,8 +15,8 @@ HoughLines::HoughLines()
 	accum = 0;
 	accum_width = 0;
 	accum_height = 0;
-	_img_w = 0;
-	_img_h = 0;
+	img_cols = 0;
+	img_rows = 0;
 }
 
 HoughLines::~HoughLines() {
@@ -27,8 +27,8 @@ HoughLines::~HoughLines() {
 
 int HoughLines::performHoughLineTransform(unsigned char* img_data, int w, int h)
 {
-	_img_w = w;
-	_img_h = h;
+	img_cols = w;
+	img_rows = h;
 
 	//Create the accu
 	double hough_h = ((sqrt(2.0) * (double)(h>w ? h : w)) / 2.0);
@@ -99,17 +99,17 @@ std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > HoughLines:
 				{
 					//y = (r - x cos(t)) / sin(t)
 					x1 = 0;
-					y1 = ((double)(r - (accum_height / 2)) - ((x1 - (_img_w / 2)) * cos(t * CONVERT_DEGREE_TO_RADIAN))) / sin(t * CONVERT_DEGREE_TO_RADIAN) + (_img_h / 2);
-					x2 = _img_w - 0;
-					y2 = ((double)(r - (accum_height / 2)) - ((x2 - (_img_w / 2)) * cos(t * CONVERT_DEGREE_TO_RADIAN))) / sin(t * CONVERT_DEGREE_TO_RADIAN) + (_img_h / 2);
+					y1 = ((double)(r - (accum_height / 2)) - ((x1 - (img_cols / 2)) * cos(t * CONVERT_DEGREE_TO_RADIAN))) / sin(t * CONVERT_DEGREE_TO_RADIAN) + (img_rows / 2);
+					x2 = img_cols - 0;
+					y2 = ((double)(r - (accum_height / 2)) - ((x2 - (img_cols / 2)) * cos(t * CONVERT_DEGREE_TO_RADIAN))) / sin(t * CONVERT_DEGREE_TO_RADIAN) + (img_rows / 2);
 				}
 				else
 				{
 					//x = (r - y sin(t)) / cos(t);
 					y1 = 0;
-					x1 = ((double)(r - (accum_height / 2)) - ((y1 - (_img_h / 2)) * sin(t * CONVERT_DEGREE_TO_RADIAN))) / cos(t * CONVERT_DEGREE_TO_RADIAN) + (_img_w / 2);
-					y2 = _img_h - 0;
-					x2 = ((double)(r - (accum_height / 2)) - ((y2 - (_img_h / 2)) * sin(t * CONVERT_DEGREE_TO_RADIAN))) / cos(t * CONVERT_DEGREE_TO_RADIAN) + (_img_w / 2);
+					x1 = ((double)(r - (accum_height / 2)) - ((y1 - (img_rows / 2)) * sin(t * CONVERT_DEGREE_TO_RADIAN))) / cos(t * CONVERT_DEGREE_TO_RADIAN) + (img_cols / 2);
+					y2 = img_rows - 0;
+					x2 = ((double)(r - (accum_height / 2)) - ((y2 - (img_rows / 2)) * sin(t * CONVERT_DEGREE_TO_RADIAN))) / cos(t * CONVERT_DEGREE_TO_RADIAN) + (img_cols / 2);
 				}
 
 				lines.push_back(std::pair< std::pair<int, int>, std::pair<int, int> >(std::pair<int, int>(x1, y1), std::pair<int, int>(x2, y2)));
@@ -122,7 +122,7 @@ std::vector< std::pair< std::pair<int, int>, std::pair<int, int> > > HoughLines:
 	return lines;
 }
 
-const unsigned int* HoughLines::GetAccu(int *w, int *h)
+const unsigned int* HoughLines::getAccum(int *w, int *h)
 {
 	*w = accum_width;
 	*h = accum_height;
