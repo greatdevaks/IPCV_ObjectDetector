@@ -137,7 +137,12 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 		imwrite("vj_ht_cp_" + img_name, img_merged);
 	}
 	else {
-		cout << "No dartbboard predicted." << endl;
+		for (size_t i = 0; i < cp_detections.size(); i++)
+		{
+			rectangle(img_merged, cp_detections[i], Scalar(0, 69, 255), 2);
+		}
+		cout << "No dartboard predicted." << endl;
+		imwrite("vj_ht_cp_" + img_name, img_merged);
 	}
 
 	//F1Score f1s;
