@@ -13,7 +13,7 @@ DartboardDetector_GroundTruthInitializer::DartboardDetector_GroundTruthInitializ
 
 	gtvec_dart1_dartboards.push_back(Rect(166, 100, abs(421 - 166), abs(355 - 100)));
 
-	gtvec_dart2_dartboards.push_back(Rect(90, 84, abs(200 - 90), abs(194 - 84)));
+	gtvec_dart2_dartboards.push_back(Rect(82, 73, abs(203 - 82), abs(208 - 73)));
 
 	gtvec_dart3_dartboards.push_back(Rect(312, 138, 398 - 312, 226 - 138));
 
@@ -21,12 +21,12 @@ DartboardDetector_GroundTruthInitializer::DartboardDetector_GroundTruthInitializ
 
 	gtvec_dart5_dartboards.push_back(Rect(421, 126, 549 - 421, 266 - 126));
 
-	gtvec_dart6_dartboards.push_back(Rect(202, 107, 282 - 202, 118 - 107));
+	gtvec_dart6_dartboards.push_back(Rect(202, 107, 282 - 202, 200 - 107));
 
 	gtvec_dart7_dartboards.push_back(Rect(232, 152, 405 - 232, 354 - 152));
 
 	gtvec_dart8_dartboards.push_back(Rect(62, 241, 134 - 62, 351 - 134));
-	gtvec_dart8_dartboards.push_back(Rect(828, 205, 969 - 828, 351 - 205));
+	gtvec_dart8_dartboards.push_back(Rect(828, 205, 969 - 828, 285 - 205));
 
 	gtvec_dart9_dartboards.push_back(Rect(169, 17, 468 - 169, 305 - 17));
 

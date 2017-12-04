@@ -117,7 +117,7 @@ DartboardDetector::DartboardDetector(Mat img_orig, string img_name)
 			rectangle(img_merged, detections[i], Scalar(0, 69, 255), 2);
 		}
 		cout << detections.size() << " dartboard(s) predicted." << endl;
-		imwrite("merged.jpg", img_merged);
+		imwrite("vj_ht_" + img_name, img_merged);
 	}
 
 	F1Score f1s;
