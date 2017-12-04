@@ -30,7 +30,7 @@ DartboardDetector_GroundTruthInitializer::DartboardDetector_GroundTruthInitializ
 
 	gtvec_dart9_dartboards.push_back(Rect(169, 17, 468 - 169, 305 - 17));
 
-	gtvec_dart10_dartboards.push_back(Rect(79, 90, 200 - 79, 222 - 90));
+	gtvec_dart10_dartboards.push_back(Rect(79, 90, 210 - 79, 232 - 90));
 	gtvec_dart10_dartboards.push_back(Rect(579, 119, 643 - 579, 224 - 119));	
 	gtvec_dart10_dartboards.push_back(Rect(913, 143, 954 - 913, 222 - 143));
 
