@@ -163,7 +163,6 @@
     <ClInclude Include="F1Score.h" />
     <ClInclude Include="FaceDetector.h" />
     <ClInclude Include="FaceDetector_GroundTruthInitializer.h" />
-    <ClInclude Include="HoughLines.h" />
     <ClInclude Include="HoughTransform.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -176,7 +175,6 @@
     <ClCompile Include="F1Score.cpp" />
     <ClCompile Include="FaceDetector.cpp" />
     <ClCompile Include="FaceDetector_GroundTruthInitializer.cpp" />
-    <ClCompile Include="HoughLines.cpp" />
     <ClCompile Include="HoughTransform.cpp" />
     <ClCompile Include="IPCV_ObjectDetector.cpp" />
     <ClCompile Include="stdafx.cpp" />
