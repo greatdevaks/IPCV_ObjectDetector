@@ -44,6 +44,9 @@
     <ClInclude Include="ColourPatches.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HoughLines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DartboardDetector_GroundTruthInitializer.cpp">
@@ -72,5 +75,6 @@
     </ClCompile>
     <ClCompile Include="DartboardColourPatchs.cpp" />
     <ClCompile Include="ColourPatches.cpp" />
+    <ClCompile Include="HoughLines.cpp" />
   </ItemGroup>
 </Project>
